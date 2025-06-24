@@ -2,7 +2,8 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import Login from "./pages/login.jsx";
 import Register from "./pages/register.jsx";
-import Dashboard from "./pages/dashboard.jsx";
+import AdminDashboard from "./pages/adminDashboard.jsx";
+import UserDashboard from "./pages/UserDashboard.jsx";
 import PrivateRoute from "./pages/protectedRoute.jsx";
 import Home from "./pages/home.jsx";
 
@@ -14,8 +15,13 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
 
-        <Route element={<PrivateRoute />}>
-          <Route path="/dashboard/:user_id" element={<Dashboard />} />
+        {/* Role-based private routes */}
+        <Route element={<PrivateRoute allowedRole="admin" />}>
+          <Route path="/dashboard/admin/:id" element={<AdminDashboard />} />
+        </Route>
+
+        <Route element={<PrivateRoute allowedRole="user" />}>
+          <Route path="/dashboard/user/:id" element={<UserDashboard />} />
         </Route>
       </Routes>
     </Router>

@@ -7,7 +7,7 @@ export default function Login() {
     password: "",
   });
 
-  const navigate = useNavigate(); // Add this line
+  const navigate = useNavigate();
 
   function handleChange(e) {
     setFormData({
@@ -36,10 +36,16 @@ export default function Login() {
       if (res.ok) {
         localStorage.setItem("token", data.token);
         localStorage.setItem("user_id", data.user_id);
-        navigate(`/dashboard/${data.user_id}`); // Redirect to dashboard
-      } else {
-        alert(data.message || "Login failed");
+        localStorage.setItem("role", data.role); // Store role
+
+        // Redirect based on role
+        if (data.role === "admin") {
+          navigate(`/dashboard/admin/${data.user_id}`);
+        } else {
+          navigate(`/dashboard/user/${data.user_id}`);
+        }
       }
+
       // eslint-disable-next-line no-unused-vars
     } catch (err) {
       alert("Network error");
