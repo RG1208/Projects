@@ -1,8 +1,6 @@
 from enum import Enum as PyEnum
-from flask_sqlalchemy import SQLAlchemy # type: ignore
 from sqlalchemy import Enum as SQLAEnum  # type: ignore
-
-db = SQLAlchemy()
+from .extensions import db
 
 ROLE_TYPES = ('student', 'teacher', 'admin')
 

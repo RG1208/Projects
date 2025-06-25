@@ -1,7 +1,5 @@
 from enum import Enum as PyEnum
-from flask_sqlalchemy import SQLAlchemy # type: ignore
-
-db = SQLAlchemy()
+from .extensions import db
 
 class Enrollment(db.Model):
     id = db.Column(db.Integer, primary_key=True)

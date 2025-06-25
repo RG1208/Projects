@@ -1,8 +1,6 @@
 from enum import Enum as PyEnum
-from flask_sqlalchemy import SQLAlchemy # type: ignore
+from .extensions import db
 from sqlalchemy import Enum as SQLAEnum  # type: ignore
-
-db = SQLAlchemy()
 
 class Submission(db.Model):
     id = db.Column(db.Integer, primary_key=True)
