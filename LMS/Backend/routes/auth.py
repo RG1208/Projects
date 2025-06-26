@@ -35,7 +35,14 @@ def register():
     db.session.add(new_user)
     db.session.commit()
 
-    access_token = create_access_token(identity=new_user.id)
+    access_token = create_access_token(
+    identity=str(new_user.id),  
+    additional_claims={
+        "role": new_user.role,
+        "name": new_user.name,
+        "email": new_user.email
+    }
+)
 
     return jsonify({
         "message": "User registered successfully",
@@ -64,7 +71,7 @@ def login():
             return jsonify({"message": "Invalid email or password."}), 401
 
         access_token = create_access_token(
-            identity=user.id,
+            identity=str(user.id),
             additional_claims={
                 'email': user.email,
                 'name': user.name,
