@@ -5,9 +5,8 @@ export default function Register() {
   const [formData, setFormData] = useState({
     email: "",
     name: "",
-    username: "",
     password: "",
-    role: "user", // default role
+    role: "student", // default role
   });
 
   const navigate = useNavigate();
@@ -80,23 +79,6 @@ export default function Register() {
               name="name"
               required
               value={formData.name}
-              onChange={handleChange}
-              className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-          <div>
-            <label
-              htmlFor="username"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Username
-            </label>
-            <input
-              type="text"
-              id="username"
-              name="username"
-              required
-              value={formData.username}
               onChange={handleChange}
               className="mt-1 w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
