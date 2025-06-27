@@ -18,3 +18,16 @@ class Submission(db.Model):
 
     def __repr__(self):
         return f'<Submission assignment_id={self.assignment_id} user_id={self.user_id}>'
+    
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "assignment_id": self.assignment_id,
+            "user_id": self.user_id,
+            "file_url": self.file_url,
+            "content": self.content,
+            "submitted_at": self.submitted_at.isoformat() if self.submitted_at else None,
+            "marks": self.marks,
+            "feedback": self.feedback,
+            "status": self.status
+        }

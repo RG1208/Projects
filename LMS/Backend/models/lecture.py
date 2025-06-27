@@ -12,3 +12,12 @@ class Lecture(db.Model):
 
     def __repr__(self):
         return f"<Lecture {self.title}>"
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "video_url": self.video_url,
+            "course_id": self.course_id,
+            "uploaded_at": self.uploaded_at.isoformat() if self.uploaded_at else None
+        }

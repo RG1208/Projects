@@ -13,3 +13,14 @@ class Assignment(db.Model):
 
     def __repr__(self):
         return f'<Assignment {self.title} for {self.course.title}>'
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "title": self.title,
+            "description": self.description,
+            "course_id": self.course_id,
+            "course_title": self.course.title if self.course else None,
+            "due_date": self.due_date.isoformat() if self.due_date else None,
+            "uploaded_at": self.uploaded_at.isoformat() if self.uploaded_at else None
+        }

@@ -6,6 +6,7 @@ from models import *
 from flask_jwt_extended import JWTManager  # type: ignore
 from routes.auth import login_bp, register_bp
 from routes.teacher import teacher_bp
+from routes.student import student_bp
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -18,7 +19,7 @@ jwt = JWTManager(app)
 app.register_blueprint(login_bp, url_prefix='/api')  # adds '/api/auth' before every route
 app.register_blueprint(register_bp, url_prefix='/api')  # adds '/api/register' before every route
 app.register_blueprint(teacher_bp, url_prefix='/api')  # adds '/api' before every route
-
+app.register_blueprint(student_bp, url_prefix='/api/student')  # adds '/api/student' before every route
 
 with app.app_context():
     db.create_all()
