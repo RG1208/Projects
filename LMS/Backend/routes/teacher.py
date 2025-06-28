@@ -475,3 +475,54 @@ def update_lecture(course_id, lecture_id):
     except Exception as e:
         return jsonify({"message": "Something went wrong.", "error": str(e)}), 500
 
+#get teacher profile
+@teacher_bp.route('/profile', methods=['GET'])
+@jwt_required()
+@role_required('teacher')
+def get_teacher_profile():
+    try:
+        teacher_id = get_jwt_identity()
+        teacher = User.query.get(teacher_id)
+
+        if not teacher:
+            return jsonify({"message": "Teacher not found"}), 404
+
+        return jsonify({
+            "message": "Teacher profile retrieved successfully",
+            "teacher": {
+                "id": teacher.id,
+                "name": teacher.name,
+                "email": teacher.email
+            }
+        }), 200
+    except Exception as e:
+        return jsonify({"message": "Something went wrong.", "error": str(e)}), 500
+    
+# Update Teacher Profile
+@teacher_bp.route('/profile', methods=['PUT'])
+@jwt_required()
+@role_required('teacher')
+def update_teacher_profile():
+    try:
+        data = request.get_json()
+        teacher_id = get_jwt_identity()
+        teacher = User.query.get(teacher_id)
+
+        if not teacher:
+            return jsonify({"message": "Teacher not found"}), 404
+
+        teacher.name = data.get('name', teacher.name)
+        teacher.email = data.get('email', teacher.email)
+
+        db.session.commit()
+
+        return jsonify({
+            "message": "Teacher profile updated successfully",
+            "teacher": {
+                "id": teacher.id,
+                "name": teacher.name,
+                "email": teacher.email
+            }
+        }), 200
+    except Exception as e:
+        return jsonify({"message": "Something went wrong.", "error": str(e)}), 500
