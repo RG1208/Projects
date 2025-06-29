@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useLocation , Outlet, Link} from "react-router-dom";
 import {
   LayoutDashboard,
   MapPinned,
@@ -6,28 +6,27 @@ import {
   Users,
   Settings,
 } from "lucide-react";
-import { Link } from "react-router-dom";
-import TeacherNavbar from "./teacherNavbar";
+import TeacherNavbar from "./TeacherNavbar";
 
 const navItems = [
   {
     name: "Dashboard",
-    path: "/teacher/dashboard",
+    path: "/teacher",
     icon: <LayoutDashboard size={20} />,
   },
   {
     name: "Course Management",
-    path: "/teacher/dashboard/course-management",
+    path: "/teacher/courses",
     icon: <MapPinned size={20} />,
   },
   {
     name: "Assignments",
-    path: "/teacher/dashboard/assignments",
+    path: "/teacher/assignments",
     icon: <AlertCircle size={20} />,
   },
   {
     name: "Lectures",
-    path: "/teacher/dashboard/lectures",
+    path: "/teacher/lectures",
     icon: <Users size={20} />,
   },
   {
@@ -71,9 +70,9 @@ export default function TeacherSidebar() {
         <TeacherNavbar />
 
         {/* Page Content */}
-        {/* <main className="flex-1 p-6 bg-gray-50">
+        <main className="flex-1 p-6 bg-gray-50">
           <Outlet />
-        </main> */}
+        </main>
       </div>
     </div>
   );
