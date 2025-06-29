@@ -5,8 +5,14 @@ from models import User
 from datetime import timedelta
 from werkzeug.security import generate_password_hash
 from models.extensions import db
+from flask_cors import CORS  # type: ignore
+
 
 register_bp = Blueprint('register', __name__)
+login_bp = Blueprint('login', __name__)
+
+# CORS(login_bp, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
+# CORS(register_bp, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
 
 @register_bp.route('/register', methods=['POST'])
 def register():
@@ -53,7 +59,6 @@ def register():
         "role": new_user.role
     }), 201
 
-login_bp = Blueprint('login', __name__)
 
 @login_bp.route('/login', methods=['POST'])
 def login():

@@ -16,8 +16,8 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_cred
 db.init_app(app)
 jwt = JWTManager(app)
 
-app.register_blueprint(login_bp, url_prefix='/api')  # adds '/api/auth' before every route
-app.register_blueprint(register_bp, url_prefix='/api')  # adds '/api/register' before every route
+app.register_blueprint(login_bp, url_prefix='/api')  # adds '/api' before every route
+app.register_blueprint(register_bp, url_prefix='/api')  # adds '/api' before every route
 app.register_blueprint(teacher_bp, url_prefix='/api')  # adds '/api' before every route
 app.register_blueprint(student_bp, url_prefix='/api/student')  # adds '/api/student' before every route
 
