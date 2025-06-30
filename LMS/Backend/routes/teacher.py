@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from models.enrollment import Enrollment
 from models.assignment import Assignment
 from models.lecture import Lecture
 from models.submission import Submission
@@ -526,3 +527,25 @@ def update_teacher_profile():
         }), 200
     except Exception as e:
         return jsonify({"message": "Something went wrong.", "error": str(e)}), 500
+    
+@teacher_bp.route('/stats', methods=['GET'])
+@jwt_required()
+@role_required('teacher')
+def get_teacher_stats():
+    teacher_id = get_jwt_identity()
+
+    # 1. Get all courses created by this teacher
+    courses = Course.query.filter_by(teacher_id=teacher_id).all()
+    course_ids = [course.id for course in courses]
+    total_courses = len(course_ids)
+
+    # 2. Count total unique students enrolled in these courses
+    enrollments = Enrollment.query.filter(Enrollment.course_id.in_(course_ids)).all()
+    unique_student_ids = set(enr.user_id for enr in enrollments)
+    total_students = len(unique_student_ids)
+
+    return jsonify({
+        "message": "Teacher stats retrieved successfully",
+        "total_courses": total_courses,
+        "total_students": total_students
+    }), 200

@@ -18,7 +18,7 @@ jwt = JWTManager(app)
 
 app.register_blueprint(login_bp, url_prefix='/api')  # adds '/api' before every route
 app.register_blueprint(register_bp, url_prefix='/api')  # adds '/api' before every route
-app.register_blueprint(teacher_bp, url_prefix='/api')  # adds '/api' before every route
+app.register_blueprint(teacher_bp, url_prefix='/api/teacher')  # adds '/api' before every route
 app.register_blueprint(student_bp, url_prefix='/api/student')  # adds '/api/student' before every route
 
 with app.app_context():
