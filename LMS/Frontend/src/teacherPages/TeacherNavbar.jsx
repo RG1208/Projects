@@ -1,8 +1,18 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { Bell } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import { Bell, LogOut } from "lucide-react";
 
 export default function TeacherNavbar() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user_id");
+    localStorage.removeItem("role");
+
+    navigate("/login");
+  };
+
   return (
     <header className="w-full bg-white shadow-sm px-6 py-3 flex justify-end items-center sticky top-0 z-50">
       <div className="flex items-center gap-4">
@@ -14,13 +24,13 @@ export default function TeacherNavbar() {
         </button>
 
         {/* Logout */}
-        {/* <Link
-          to="/"
+        <button
+          onClick={handleLogout}
           className="flex items-center gap-1 text-sm font-medium text-gray-700 hover:text-red-600 transition"
         >
           <LogOut size={20} />
           Logout
-        </Link> */}
+        </button>
       </div>
     </header>
   );

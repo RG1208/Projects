@@ -40,11 +40,11 @@ export default function Login() {
 
         // Redirect based on role
         if (data.role === "admin") {
-          navigate(`/dashboard/admin/${data.user_id}`);
+          navigate('/admin');
         } else if (data.role === "student") {
-          navigate(`/dashboard/student/${data.user_id}`);
+          navigate('/student');
         } else if (data.role === "teacher") {
-          navigate(`/dashboard/teacher/${data.user_id}`);
+          navigate('/teacher');
         } else {
           alert("Unknown role");
         }

@@ -4,7 +4,12 @@ import Login from "./pages/login";
 import Register from "./pages/register";
 import PrivateRoute from "./components/protectedRoutes";
 import Home from "./pages/home";
-import TeacherSidebar from "./teacherPages/teacherLayoutSidebar";
+import TeacherSidebar from "./teacherPages/TeacherLayoutSidebar";
+import TeacherProfile from "./teacherPages/TeacherProfile";
+import TeacherLectures from "./teacherPages/TeacherLectures";
+import TeacherAssignments from "./teacherPages/TeacherAssignments";
+import TeacherCourses from "./teacherPages/TeacherCourses";
+import TeacherDashboard from "./teacherPages/TeacherDashboard";
 
 function App() {
   return (
@@ -17,12 +22,12 @@ function App() {
 
           {/* Role-based private routes */}
           <Route element={<PrivateRoute allowedRole="teacher" />}>
-            <Route path="/dashboard/teacher/:id" element={<TeacherSidebar />}>
+            <Route path="/teacher" element={<TeacherSidebar />}>
               <Route index element={<TeacherDashboard />} />
-              <Route path="courses" element={<Courses />} />
-              <Route path="assignments" element={<Assignments />} />
-              <Route path="lectures" element={<Lectures />} />
-              <Route path="profile" element={<Profile />} />
+              <Route path="courses" element={<TeacherCourses />} />
+              <Route path="assignments" element={<TeacherAssignments />} />
+              <Route path="lectures" element={<TeacherLectures />} />
+              <Route path="profile" element={<TeacherProfile />} />
             </Route>
           </Route>
         </Routes>
