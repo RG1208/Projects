@@ -50,8 +50,8 @@ function App() {
   const fetchData = async () => {
     try {
       const [incidentsResponse, statsResponse] = await Promise.all([
-        fetch('http://localhost:5000/api/incidents'),
-        fetch('http://localhost:5000/api/stats')
+        fetch('https://projects-vt9t.onrender.com/api/incidents'),
+        fetch('https://projects-vt9t.onrender.com/api/stats')
       ]);
 
       if (!incidentsResponse.ok || !statsResponse.ok) {
