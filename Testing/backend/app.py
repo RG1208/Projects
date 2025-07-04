@@ -56,6 +56,12 @@ incidents = [
     }
 ]
 
+@app.route('/', methods=['GET'])
+def index():
+    """Health check route"""
+    return jsonify({'message': 'API is working', 'status': 'success'}), 200
+
+
 @app.route('/api/incidents', methods=['GET'])
 def get_incidents():
     """Get all incidents"""
