@@ -13,13 +13,15 @@ from datetime import datetime
 
 teacher_bp = Blueprint('course', __name__)
 
-# GET all courses
+# GET all courses created by the logged-in teacher
 @teacher_bp.route('/courses', methods=['GET'])
 @jwt_required()
 @role_required('teacher')
 def get_courses():
     try:
-        courses = Course.query.all()
+        teacher_id = get_jwt_identity()  # Get logged-in teacher's ID from JWT
+        courses = Course.query.filter_by(teacher_id=teacher_id).all()
+
         course_list = [{
             'id': course.id,
             'title': course.title,
@@ -32,6 +34,7 @@ def get_courses():
             'message': 'Courses retrieved successfully',
             'courses': course_list
         }), 200
+
     except Exception as e:
         return jsonify({"message": "Something went wrong.", "error": str(e)}), 500
 
@@ -172,6 +175,7 @@ def get_students_in_course(course_id):
 @role_required('teacher')
 def create_assignment(course_id):
     try:
+        current_teacher_id = get_jwt_identity()
         data = request.get_json()
         title = data.get('title')
         description = data.get('description')
@@ -180,17 +184,17 @@ def create_assignment(course_id):
         if not title or not description:
             return jsonify({"message": "Title and description are required"}), 400
 
-        # Parse due_date string to datetime object
         due_date = None
         if due_date_str:
             try:
-                due_date = datetime.strptime(due_date_str, "%Y-%m-%d")  # e.g., "2025-07-02"
+                due_date = datetime.strptime(due_date_str, "%Y-%m-%d")
             except ValueError:
                 return jsonify({"message": "Invalid date format. Use YYYY-MM-DD"}), 400
 
-        course = Course.query.get(course_id)
+        # Check course ownership
+        course = Course.query.filter_by(id=course_id, teacher_id=current_teacher_id).first()
         if not course:
-            return jsonify({"message": "Course not found"}), 404
+            return jsonify({"message": "Course not found or unauthorized"}), 404
 
         new_assignment = Assignment(
             title=title,
@@ -364,7 +368,6 @@ def grade_submission(submission_id):
         }), 200
     except Exception as e:
         return jsonify({"message": "Something went wrong.", "error": str(e)}), 500
-
 # Create Lecture
 @teacher_bp.route('/courses/<int:course_id>/lectures', methods=['POST'])
 @jwt_required()
@@ -373,6 +376,7 @@ def create_lecture(course_id):
     try:
         data = request.get_json()
         title = data.get('title')
+        description = data.get('description')
         video_url = data.get('video_url')
 
         if not title or not video_url:
@@ -384,6 +388,7 @@ def create_lecture(course_id):
 
         new_lecture = Lecture(
             title=title,
+            description=description,
             video_url=video_url,
             course_id=course.id
         )
@@ -392,15 +397,11 @@ def create_lecture(course_id):
 
         return jsonify({
             "message": "Lecture created successfully",
-            "lecture": {
-                "id": new_lecture.id,
-                "title": new_lecture.title,
-                "video_url": new_lecture.video_url,
-                "course_id": new_lecture.course_id
-            }
+            "lecture": new_lecture.to_dict()
         }), 201
     except Exception as e:
         return jsonify({"message": "Something went wrong.", "error": str(e)}), 500
+
 
 # Get Lectures in a course    
 @role_required('teacher')

@@ -7,9 +7,12 @@ from flask_jwt_extended import JWTManager  # type: ignore
 from routes.auth import login_bp, register_bp
 from routes.teacher import teacher_bp
 from routes.student import student_bp
+from flask_migrate import Migrate #type:ignore
+
 
 app = Flask(__name__)
 app.config.from_object(Config)
+migrate = Migrate(app, db) # type: ignore
 
 CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
 
