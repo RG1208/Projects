@@ -158,7 +158,7 @@ export const LecturesDashboard: React.FC = () => {
         });
     };
 
-    const formatDuration = (duration: string) => {
+    const formatDuration = (duration: string | undefined) => {
         return duration || 'N/A';
     };
 
@@ -253,8 +253,8 @@ export const LecturesDashboard: React.FC = () => {
                                         key={course.id}
                                         onClick={() => setSelectedCourse(course)}
                                         className={`w-full text-left p-3 rounded-lg transition-all duration-200 ${selectedCourse?.id === course.id
-                                                ? 'bg-blue-50 border-blue-200 text-blue-900'
-                                                : 'hover:bg-gray-50 text-gray-700'
+                                            ? 'bg-blue-50 border-blue-200 text-blue-900'
+                                            : 'hover:bg-gray-50 text-gray-700'
                                             } border`}
                                     >
                                         <div className="font-medium text-sm line-clamp-2">{course.title}</div>
