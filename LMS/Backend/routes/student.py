@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify #type:ignore
 from models.assignment import Assignment
 from models.lecture import Lecture
 from models.submission import Submission
@@ -41,6 +41,28 @@ def enroll_in_course(course_id):
     db.session.commit()
     
     return jsonify({"message": "Enrolled in course successfully"}), 200
+
+# Unenroll from a course
+@student_bp.route('/courses/<int:course_id>/unenroll', methods=['POST'])
+@jwt_required()
+@role_required('student')
+def unenroll_from_course(course_id):
+    user_id = get_jwt_identity()
+    course = Course.query.get(course_id)
+
+    if not course:
+        return jsonify({"message": "Course not found"}), 404
+
+    student = User.query.get(user_id)
+
+    if student not in course.students:
+        return jsonify({"message": "You are not enrolled in this course"}), 400
+
+    course.students.remove(student)
+    db.session.commit()
+
+    return jsonify({"message": "Unenrolled from course successfully"}), 200
+
 
 # Get list of courses the student is enrolled in
 @student_bp.route('/my-courses', methods=['GET'])
@@ -262,3 +284,31 @@ def delete_profile():
     db.session.commit()
     
     return jsonify({"message": "Profile deleted successfully"}), 200
+
+
+#Student Stats
+@student_bp.route('/stats', methods=['GET'])
+@jwt_required()
+@role_required('student')
+def get_student_stats():
+    student_id = get_jwt_identity()
+
+    # 1. Fetch enrollments of this student
+    enrollments = Enrollment.query.filter_by(user_id=student_id).all()
+    enrolled_course_ids = [enr.course_id for enr in enrollments]
+    total_courses_enrolled = len(enrolled_course_ids)
+
+    # 2. Fetch enrolled course names (optional)
+    courses = Course.query.filter(Course.id.in_(enrolled_course_ids)).all()
+    enrolled_course_names = [course.title for course in courses]
+
+    # 3. Count total assignments in enrolled courses (optional)
+    assignments = Assignment.query.filter(Assignment.course_id.in_(enrolled_course_ids)).all()
+    total_assignments = len(assignments)
+
+    return jsonify({
+        "message": "Student stats retrieved successfully",
+        "total_courses_enrolled": total_courses_enrolled,
+        "enrolled_courses": enrolled_course_names,   # Optional, remove if not needed
+        "total_assignments": total_assignments       # Optional, remove if not needed
+    }), 200

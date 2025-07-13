@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask #type:ignore
 from config import Config
 from flask_cors import CORS  # type: ignore
 from models.extensions import db  

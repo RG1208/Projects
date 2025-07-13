@@ -10,6 +10,10 @@ import TeacherLectures from "./teacherPages/TeacherLectures";
 import TeacherAssignments from "./teacherPages/TeacherAssignments";
 import TeacherCourses from "./teacherPages/TeacherCourses";
 import TeacherDashboard from "./teacherPages/TeacherDashboard";
+import StudentSidebar from "./studentPages/StudentLayoutSidebar";
+import StudentDashboard from "./studentPages/StudentDashboard";
+import { CourseManagement } from "./studentPages/CourseManagement";
+import { EnrolledCourses } from "./studentPages/EnrolledCourses";
 
 function App() {
   return (
@@ -20,7 +24,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
 
-          {/* Role-based private routes */}
+          {/* Teacher private routes */}
           <Route element={<PrivateRoute allowedRole="teacher" />}>
             <Route path="/teacher" element={<TeacherSidebar />}>
               <Route index element={<TeacherDashboard />} />
@@ -30,6 +34,16 @@ function App() {
               <Route path="profile" element={<TeacherProfile />} />
             </Route>
           </Route>
+
+          {/* Student private routes */}
+          <Route element={<PrivateRoute allowedRole="student" />}>
+            <Route path="/student" element={<StudentSidebar/>}>
+              <Route index element={<StudentDashboard />} />
+              <Route path="course-management" element={<CourseManagement />} />
+              <Route path="courses-enrolled" element={<EnrolledCourses />} />
+            </Route>
+          </Route>
+
         </Routes>
       </Router>
     </>

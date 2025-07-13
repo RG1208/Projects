@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify #type:ignore
 from models.enrollment import Enrollment
 from models.assignment import Assignment
 from models.lecture import Lecture

@@ -6,7 +6,7 @@ import {
   Users,
   Settings,
 } from "lucide-react";
-import TeacherNavbar from "./TeacherNavbar";
+import StudentNavbar from "../studentPages/StudentNavbar";
 
 const navItems = [
   {
@@ -67,7 +67,7 @@ export default function TeacherSidebar() {
 
       {/* Main Section */}
       <div className="flex flex-col flex-1">
-        <TeacherNavbar />
+        <StudentNavbar />
 
         {/* Page Content */}
         <main className="flex-1 p-6 bg-gray-50">
