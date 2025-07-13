@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-export default function TeacherProfile() {
+export const ProfileSection = () => {
   const [profile, setProfile] = useState(null);
   const [editMode, setEditMode] = useState(false);
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
@@ -10,27 +10,35 @@ export default function TeacherProfile() {
 
   useEffect(() => {
     // Fetch profile
-    fetch("http://localhost:5000/api/student/profile", {
+    fetch("http://127.0.0.1:5000/api/student/profile", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.teacher) {
-          setProfile(data.teacher);
-          setFormData({ name: data.teacher.name, email: data.teacher.email, password: "" });
-        }
+        // Backend returns user data directly, not wrapped in 'student' object
+        setProfile(data);
+        setFormData({ name: data.name, email: data.email, password: "" });
+      })
+      .catch((error) => {
+        console.error("Error fetching profile:", error);
       });
 
-    fetch("http://localhost:5000/api/student/stats", {
+    fetch("http://127.0.0.1:5000/api/student/stats", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
     })
       .then((res) => res.json())
       .then((data) => {
-        setStats({ totalStudents: data.total_students, totalCourses: data.total_courses });
+        setStats({ 
+          totalStudents: data.total_courses_enrolled, 
+          totalCourses: data.total_assignments 
+        });
+      })
+      .catch((error) => {
+        console.error("Error fetching stats:", error);
       });
   }, [token]);
 
@@ -39,7 +47,7 @@ export default function TeacherProfile() {
   };
 
   const handleUpdate = async () => {
-    const res = await fetch("http://localhost:5000/api/teacher/profile", {
+    const res = await fetch("http://127.0.0.1:5000/api/student/profile", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -63,7 +71,7 @@ export default function TeacherProfile() {
   return (
     <div className="p-6 max-w-3xl mx-auto">
       <div className="bg-white rounded-2xl shadow-lg p-6 space-y-6">
-        <h2 className="text-2xl font-bold text-red-600">Teacher Profile</h2>
+        <h2 className="text-2xl font-bold text-red-600">Student Profile</h2>
 
         <div className="space-y-2">
           <div><span className="font-semibold">ID:</span> {profile.id}</div>
@@ -110,12 +118,12 @@ export default function TeacherProfile() {
           <h3 className="text-lg font-semibold text-gray-700 mb-2">Stats</h3>
           <div className="grid grid-cols-2 gap-4">
             <div className="bg-blue-50 p-4 rounded-xl text-center shadow-sm">
-              <div className="text-lg font-bold">{stats.totalCourses}</div>
-              <div className="text-sm text-gray-600">Courses Posted</div>
+              <div className="text-lg font-bold">{stats.totalStudents}</div>
+              <div className="text-sm text-gray-600">Courses Enrolled</div>
             </div>
             <div className="bg-green-50 p-4 rounded-xl text-center shadow-sm">
-              <div className="text-lg font-bold">{stats.totalStudents}</div>
-              <div className="text-sm text-gray-600">Students Enrolled</div>
+              <div className="text-lg font-bold">{stats.totalCourses}</div>
+              <div className="text-sm text-gray-600">Total Assignments</div>
             </div>
           </div>
         </div>
@@ -151,4 +159,4 @@ export default function TeacherProfile() {
       </div>
     </div>
   );
-}
+};

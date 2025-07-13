@@ -14,6 +14,9 @@ import StudentSidebar from "./studentPages/StudentLayoutSidebar";
 import StudentDashboard from "./studentPages/StudentDashboard";
 import { CourseManagement } from "./studentPages/CourseManagement";
 import { EnrolledCourses } from "./studentPages/EnrolledCourses";
+import { AssignmentsDashboard } from "./studentPages/AssignmentManagement";
+import { LecturesDashboard } from "./studentPages/LecturesDashboard";
+import { ProfileSection } from "./studentPages/StudentProfile";
 
 function App() {
   return (
@@ -41,6 +44,9 @@ function App() {
               <Route index element={<StudentDashboard />} />
               <Route path="course-management" element={<CourseManagement />} />
               <Route path="courses-enrolled" element={<EnrolledCourses />} />
+              <Route path="assignments" element={<AssignmentsDashboard />} />
+              <Route path="Lectures" element={<LecturesDashboard />} />
+              <Route path="Profile" element={<ProfileSection />} />
             </Route>
           </Route>
 
