@@ -10,6 +10,7 @@ import TeacherLectures from "./teacherPages/TeacherLectures";
 import TeacherAssignments from "./teacherPages/TeacherAssignments";
 import TeacherCourses from "./teacherPages/TeacherCourses";
 import TeacherDashboard from "./teacherPages/TeacherDashboard";
+import TeacherAssignmentSubmissions from "./teacherPages/TeacherAssignmentSubmissions";
 import StudentSidebar from "./studentPages/StudentLayoutSidebar";
 import StudentDashboard from "./studentPages/StudentDashboard";
 import { CourseManagement } from "./studentPages/CourseManagement";
@@ -34,6 +35,7 @@ function App() {
               <Route index element={<TeacherDashboard />} />
               <Route path="courses" element={<TeacherCourses />} />
               <Route path="assignments" element={<TeacherAssignments />} />
+              <Route path="assignments/:assignmentId/submissions" element={<TeacherAssignmentSubmissions />} />
               <Route path="lectures" element={<TeacherLectures />} />
               <Route path="profile" element={<TeacherProfile />} />
             </Route>

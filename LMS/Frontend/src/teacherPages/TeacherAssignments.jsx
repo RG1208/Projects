@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 export default function TeacherAssignments() {
   const [assignments, setAssignments] = useState({});
@@ -100,6 +101,8 @@ export default function TeacherAssignments() {
 
     fetchAssignments();
   };
+
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 to-white p-6">
@@ -222,6 +225,12 @@ export default function TeacherAssignments() {
                         onClick={() => deleteAssignment(item.id)}
                       >
                         Delete
+                      </button>
+                      <button
+                        className="bg-green-600 text-white px-4 py-1 rounded-xl"
+                        onClick={() => navigate(`/teacher/assignments/${item.id}/submissions`)}
+                      >
+                        View Submissions
                       </button>
                     </>
                   )}
