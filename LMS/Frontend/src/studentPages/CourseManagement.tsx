@@ -134,12 +134,14 @@ export const CourseCard: React.FC<{
                         {isEnrolled ? (
                             <div className="flex gap-2">
                                 <button
+                                    type="button"
                                     onClick={() => onViewCourse?.(course.id)}
                                     className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium"
                                 >
                                     View Course
                                 </button>
                                 <button
+                                    type="button"
                                     onClick={() => onDeroll?.(course.id)}
                                     disabled={isDerolling}
                                     className={`bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg text-sm font-medium ${isDerolling ? 'opacity-50 cursor-not-allowed' : ''}`}
@@ -149,6 +151,7 @@ export const CourseCard: React.FC<{
                             </div>
                         ) : (
                             <button
+                                type="button"
                                 onClick={() => onEnroll?.(course.id)}
                                 disabled={isEnrolling}
                                 className={`bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg text-sm font-medium ${isEnrolling ? 'opacity-50 cursor-not-allowed' : ''}`}
