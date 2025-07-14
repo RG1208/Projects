@@ -1,4 +1,4 @@
-import { useLocation , Outlet, Link} from "react-router-dom";
+import { useLocation, Outlet, Link } from "react-router-dom";
 import {
   LayoutDashboard,
   MapPinned,
@@ -38,30 +38,35 @@ const navItems = [
 
 export default function TeacherSidebar() {
   const location = useLocation();
+
   return (
-    <div className="flex min-h-screen bg-gray-100">
+    <div className="flex min-h-screen bg-gradient-to-br from-purple-100 to-white">
       {/* Sidebar */}
-      <aside className="w-64 bg-white shadow-md p-4 flex flex-col justify-between">
+      <aside className="w-64 bg-purple-600 text-white rounded-3xl m-4 p-6 shadow-xl flex flex-col justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-red-600 mb-6">
-            Teacher Dashboard
+          <h2 className="text-2xl font-bold mb-10 text-white tracking-wide">
+            🧑‍🏫 Teacher Panel
           </h2>
-          <nav className="space-y-2">
+          <nav className="space-y-3">
             {navItems.map((item) => (
               <Link
                 key={item.name}
                 to={item.path}
-                className={`flex items-center px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
+                className={`flex items-center px-4 py-3 rounded-xl text-sm font-medium transition-all ${
                   location.pathname === item.path
-                    ? "bg-red-500 text-white"
-                    : "text-gray-700 hover:bg-red-100"
+                    ? "bg-white text-purple-700 shadow-md"
+                    : "text-white hover:bg-purple-500"
                 }`}
               >
                 {item.icon}
-                <span className="ml-2">{item.name}</span>
+                <span className="ml-3">{item.name}</span>
               </Link>
             ))}
           </nav>
+        </div>
+
+        <div className="text-center text-sm mt-8 text-purple-100">
+          © 2025 LMS Portal
         </div>
       </aside>
 
@@ -70,7 +75,7 @@ export default function TeacherSidebar() {
         <StudentNavbar />
 
         {/* Page Content */}
-        <main className="flex-1 p-6 bg-gray-50">
+        <main className="flex-1 p-6 bg-gray-50 rounded-3xl m-4 shadow-md">
           <Outlet />
         </main>
       </div>
