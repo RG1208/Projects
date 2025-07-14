@@ -17,6 +17,7 @@ import { EnrolledCourses } from "./studentPages/EnrolledCourses";
 import { AssignmentsDashboard } from "./studentPages/AssignmentManagement";
 import { LecturesDashboard } from "./studentPages/LecturesDashboard";
 import { ProfileSection } from "./studentPages/StudentProfile";
+import StudentSubmissions from "./studentPages/StudentSubmissions";
 
 function App() {
   return (
@@ -47,6 +48,7 @@ function App() {
               <Route path="assignments" element={<AssignmentsDashboard />} />
               <Route path="Lectures" element={<LecturesDashboard />} />
               <Route path="Profile" element={<ProfileSection />} />
+              <Route path="submissions" element={<StudentSubmissions />} />
             </Route>
           </Route>
 

@@ -101,21 +101,49 @@ def get_course(course_id):
 @student_bp.route('/my-courses/assignments', methods=['GET'])
 @jwt_required()
 @role_required('student')
-def get_assignments():
+def get_assignments_for_student():
     user_id = get_jwt_identity()
-    user = User.query.get(user_id)
-    if not user:
-        return jsonify({"message": "User not found"}), 404
 
-    courses = Course.query.filter(Course.students.any(id=user_id)).all()
-    assignments = []
-    
-    for course in courses:
-        course_assignments = Assignment.query.filter_by(course_id=course.id).all()
-        for assignment in course_assignments:
-            assignments.append(assignment.to_dict())
-    
-    return jsonify(assignments), 200
+    # Get course IDs where the student is enrolled
+    enrolled_course_ids = db.session.query(Enrollment.course_id).filter_by(user_id=user_id).subquery()
+
+    # Get all assignments for those courses
+    assignments = (
+        db.session.query(Assignment)
+        .join(Course)
+        .filter(Assignment.course_id.in_(enrolled_course_ids))
+        .all()
+    )
+
+    result = []
+    for assignment in assignments:
+        # Check if submission exists for the student
+        submission = Submission.query.filter_by(user_id=user_id, assignment_id=assignment.id).first()
+
+        # Determine status
+        if submission:
+            status = 'graded' if submission.marks is not None else 'submitted'
+        else:
+            status = 'pending'
+
+        result.append({
+            "id": assignment.id,
+            "title": assignment.title,
+            "description": assignment.description,
+            "course_id": assignment.course_id,
+            "course_title": assignment.course.title if assignment.course else None,
+            "due_date": assignment.due_date.isoformat() if assignment.due_date else None,
+            "created_at": assignment.uploaded_at.isoformat() if assignment.uploaded_at else None,
+            "max_points": getattr(assignment, 'max_points', None),
+            "instructions": getattr(assignment, 'instructions', None),
+            "status": status,
+            "submission_id": submission.id if submission else None,
+            "grade": submission.marks if submission else None,
+            "feedback": submission.feedback if submission else None
+        })
+
+    return jsonify(result), 200
+
 
 # Get details of a specific assignment for courses the student is enrolled in
 @student_bp.route('/my-courses/assignments/<int:assignment_id>', methods=['GET'])
@@ -168,6 +196,38 @@ def submit_assignment(assignment_id):
     db.session.commit()
 
     return jsonify({"message": "Submission successful"}), 201
+
+# Get all submitted assignments by student
+@student_bp.route('/my-courses/assignments/submissions', methods=['GET'])
+@jwt_required()
+@role_required('student')
+def get_all_submissions():
+    try:
+        user_id = get_jwt_identity()
+
+        # Query explicitly with db.session
+        results = db.session.query(Submission, Assignment).join(
+            Assignment, Submission.assignment_id == Assignment.id
+        ).filter(Submission.user_id == user_id).all()
+
+        submissions = []
+        for s, a in results:
+            submissions.append({
+                "assignment_title": a.title,
+                "submitted_at": s.submitted_at,
+                "grade": s.marks,  # ✅ Use correct field
+                "feedback": s.feedback,
+                "content": s.content,
+                "max_points": a.max_points if hasattr(a, 'max_points') else None  # fallback if missing
+            })
+
+        return jsonify(submissions), 200
+
+    except Exception as e:
+        print("Error in get_all_submissions:", e)
+        return jsonify({"error": "Internal Server Error"}), 500
+
+
 
 # Get submissions for a specific assignment for courses the student is enrolled in
 @student_bp.route('/my-courses/assignments/<int:assignment_id>/submissions', methods=['GET'])

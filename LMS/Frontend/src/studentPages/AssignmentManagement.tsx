@@ -38,9 +38,9 @@ const assignmentsApi = {
     submitAssignment: async (assignmentId: number, content: string) => {
         const res = await fetch(`${API_BASE}/my-courses/assignments/${assignmentId}/submit`, {
             method: "POST",
-            headers: { 
+            headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${getToken()}` 
+                Authorization: `Bearer ${getToken()}`
             },
             body: JSON.stringify({ content }),
         });
@@ -247,7 +247,14 @@ export const AssignmentsDashboard: React.FC = () => {
                             <h1 className="text-3xl font-bold text-gray-900 mb-2">Assignments Dashboard</h1>
                             <p className="text-gray-600">Track and submit your course assignments</p>
                         </div>
-
+                        {/* View My Submissions Button */}
+                        <button
+                            onClick={() => window.location.href = '/student/submissions'}
+                            className="inline-flex items-center px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors duration-200 mb-4 lg:mb-0"
+                        >
+                            <Upload className="w-5 h-5 mr-2" />
+                            View My Submissions
+                        </button>
                         {/* Stats */}
                         <div className="grid grid-cols-3 gap-4 mt-6 lg:mt-0">
                             <div className="bg-amber-50 rounded-lg p-4 text-center">
@@ -325,83 +332,85 @@ export const AssignmentsDashboard: React.FC = () => {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        {filteredAssignments.map((assignment) => (
-                            <div
-                                key={assignment.id}
-                                className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-blue-200 overflow-hidden"
-                            >
-                                <div className="p-6">
-                                    {/* Header */}
-                                    <div className="flex items-start justify-between mb-4">
-                                        <div className="flex-1">
-                                            <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
-                                                {assignment.title}
-                                            </h3>
-                                            <div className="flex items-center text-sm text-gray-600 mb-2">
-                                                <BookOpen className="w-4 h-4 mr-1" />
-                                                <span>{assignment.course_title}</span>
+                        {filteredAssignments
+                            .filter(assignment => assignment.status !== 'submitted') // 👈 Hides submitted assignments
+                            .map((assignment) => (
+                                <div
+                                    key={assignment.id}
+                                    className="bg-white rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-gray-100 hover:border-blue-200 overflow-hidden"
+                                >
+                                    <div className="p-6">
+                                        {/* Header */}
+                                        <div className="flex items-start justify-between mb-4">
+                                            <div className="flex-1">
+                                                <h3 className="text-lg font-semibold text-gray-900 mb-2 line-clamp-2">
+                                                    {assignment.title}
+                                                </h3>
+                                                <div className="flex items-center text-sm text-gray-600 mb-2">
+                                                    <BookOpen className="w-4 h-4 mr-1" />
+                                                    <span>{assignment.course_title}</span>
+                                                </div>
+                                            </div>
+                                            <div className={`flex items-center px-2 py-1 rounded-full border ${getStatusColor(assignment.status || 'pending')}`}>
+                                                {getStatusIcon(assignment.status || 'pending')}
+                                                <span className="text-xs font-medium ml-1 capitalize">
+                                                    {assignment.status || 'pending'}
+                                                </span>
                                             </div>
                                         </div>
-                                        <div className={`flex items-center px-2 py-1 rounded-full border ${getStatusColor(assignment.status || 'pending')}`}>
-                                            {getStatusIcon(assignment.status || 'pending')}
-                                            <span className="text-xs font-medium ml-1 capitalize">
-                                                {assignment.status || 'pending'}
-                                            </span>
+
+                                        {/* Description */}
+                                        <p className="text-gray-600 text-sm mb-4 line-clamp-3">
+                                            {assignment.description}
+                                        </p>
+
+                                        {/* Due Date */}
+                                        <div className={`flex items-center text-sm mb-4 ${isOverdue(assignment.due_date) && assignment.status === 'pending'
+                                            ? 'text-red-600'
+                                            : 'text-gray-500'
+                                            }`}>
+                                            <Calendar className="w-4 h-4 mr-1" />
+                                            <span>Due: {formatDate(assignment.due_date)}</span>
+                                            {isOverdue(assignment.due_date) && assignment.status === 'pending' && (
+                                                <span className="ml-2 text-red-600 font-medium">(Overdue)</span>
+                                            )}
                                         </div>
-                                    </div>
 
-                                    {/* Description */}
-                                    <p className="text-gray-600 text-sm mb-4 line-clamp-3">
-                                        {assignment.description}
-                                    </p>
-
-                                    {/* Due Date */}
-                                    <div className={`flex items-center text-sm mb-4 ${isOverdue(assignment.due_date) && assignment.status === 'pending'
-                                        ? 'text-red-600'
-                                        : 'text-gray-500'
-                                        }`}>
-                                        <Calendar className="w-4 h-4 mr-1" />
-                                        <span>Due: {formatDate(assignment.due_date)}</span>
-                                        {isOverdue(assignment.due_date) && assignment.status === 'pending' && (
-                                            <span className="ml-2 text-red-600 font-medium">(Overdue)</span>
-                                        )}
-                                    </div>
-
-                                    {/* Points and Grade */}
-                                    <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
-                                        <div className="flex items-center">
-                                            <span>Max Points: {assignment.max_points || 'N/A'}</span>
-                                        </div>
-                                        {assignment.grade !== undefined && (
-                                            <div className="flex items-center text-green-600 font-medium">
-                                                <span>Grade: {assignment.grade}/{assignment.max_points}</span>
+                                        {/* Points and Grade */}
+                                        <div className="flex items-center justify-between text-sm text-gray-500 mb-4">
+                                            <div className="flex items-center">
+                                                <span>Max Points: {assignment.max_points || 'N/A'}</span>
                                             </div>
-                                        )}
-                                    </div>
+                                            {assignment.grade !== undefined && (
+                                                <div className="flex items-center text-green-600 font-medium">
+                                                    <span>Grade: {assignment.grade}/{assignment.max_points}</span>
+                                                </div>
+                                            )}
+                                        </div>
 
-                                    {/* Actions */}
-                                    <div className="flex gap-2">
-                                        <button
-                                            onClick={() => handleViewAssignment(assignment)}
-                                            className="flex-1 flex items-center justify-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium"
-                                        >
-                                            <Eye className="w-4 h-4 mr-1" />
-                                            View Details
-                                        </button>
-
-                                        {assignment.status === 'pending' && (
+                                        {/* Actions */}
+                                        <div className="flex gap-2">
                                             <button
-                                                onClick={() => handleSubmitAssignment(assignment)}
-                                                className="flex-1 flex items-center justify-center px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 text-sm font-medium"
+                                                onClick={() => handleViewAssignment(assignment)}
+                                                className="flex-1 flex items-center justify-center px-3 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors duration-200 text-sm font-medium"
                                             >
-                                                <Send className="w-4 h-4 mr-1" />
-                                                Submit
+                                                <Eye className="w-4 h-4 mr-1" />
+                                                View Details
                                             </button>
-                                        )}
+
+                                            {assignment.status === 'pending' && (
+                                                <button
+                                                    onClick={() => handleSubmitAssignment(assignment)}
+                                                    className="flex-1 flex items-center justify-center px-3 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors duration-200 text-sm font-medium"
+                                                >
+                                                    <Send className="w-4 h-4 mr-1" />
+                                                    Submit
+                                                </button>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            ))}
                     </div>
                 )}
             </div>
