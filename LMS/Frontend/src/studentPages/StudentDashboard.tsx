@@ -1,3 +1,4 @@
+
 import { useNavigate } from "react-router-dom";
 
 export default function StudentDashboard() {
@@ -152,7 +153,7 @@ export default function StudentDashboard() {
           </div>
           <div className="bg-white p-6 rounded-2xl shadow">
             <h3 className="text-lg font-semibold text-purple-700 mb-2">Today's Schedule</h3>
-            <p className="text-sm text-gray-600">10:00 AM - OOPs Lab<br/>2:00 PM - DBMS Lecture</p>
+            <p className="text-sm text-gray-600">10:00 AM - OOPs Lab<br />2:00 PM - DBMS Lecture</p>
           </div>
         </section>
       </main>
