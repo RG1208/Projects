@@ -14,8 +14,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 migrate = Migrate(app, db) # type: ignore
 
-CORS(app, resources={r"/*": {"origins": "http://localhost:5173"}}, supports_credentials=True)
-CORS(app, resources={r"/*": {"origins": "http://localhost:5174"}}, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": "https://learnify-khaki-chi.vercel.app/"}}, supports_credentials=True)
 
 db.init_app(app)
 jwt = JWTManager(app)
