@@ -1,9 +1,9 @@
-from flask import Blueprint, request, jsonify
-from werkzeug.security import check_password_hash
+from flask import Blueprint, request, jsonify #type:ignore
+from werkzeug.security import check_password_hash #type:ignore
 from flask_jwt_extended import create_access_token # type: ignore
 from models import User
 from datetime import timedelta
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash #type:ignore
 from models.extensions import db
 from flask_cors import CORS  # type: ignore
 

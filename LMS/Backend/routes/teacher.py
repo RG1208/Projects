@@ -180,6 +180,7 @@ def create_assignment(course_id):
         title = data.get('title')
         description = data.get('description')
         due_date_str = data.get('due_date')
+        max_points = data.get('max_points')
 
         if not title or not description:
             return jsonify({"message": "Title and description are required"}), 400
@@ -191,6 +192,13 @@ def create_assignment(course_id):
             except ValueError:
                 return jsonify({"message": "Invalid date format. Use YYYY-MM-DD"}), 400
 
+        # Validate max_points (optional, can be float or int, or None)
+        if max_points is not None:
+            try:
+                max_points = float(max_points)
+            except (ValueError, TypeError):
+                return jsonify({"message": "Invalid max_points. Must be a number."}), 400
+
         # Check course ownership
         course = Course.query.filter_by(id=course_id, teacher_id=current_teacher_id).first()
         if not course:
@@ -201,6 +209,7 @@ def create_assignment(course_id):
             description=description,
             course_id=course.id,
             due_date=due_date
+            , max_points=max_points
         )
         db.session.add(new_assignment)
         db.session.commit()
@@ -213,6 +222,7 @@ def create_assignment(course_id):
                 "description": new_assignment.description,
                 "course_id": new_assignment.course_id,
                 "due_date": new_assignment.due_date.isoformat() if new_assignment.due_date else None
+                , "max_points": new_assignment.max_points
             }
         }), 201
     except Exception as e:

@@ -7,6 +7,7 @@ class Assignment(db.Model):
     description = db.Column(db.Text, nullable=True)
     course_id = db.Column(db.Integer, db.ForeignKey('course.id'), nullable=False)
     due_date = db.Column(db.DateTime, nullable=True)
+    max_points = db.Column(db.Float, nullable=True)  # ✅ Added field
     uploaded_at = db.Column(db.DateTime, server_default=db.func.now())
 
     course = db.relationship('Course', backref=db.backref('assignments', lazy=True))
@@ -22,5 +23,6 @@ class Assignment(db.Model):
             "course_id": self.course_id,
             "course_title": self.course.title if self.course else None,
             "due_date": self.due_date.isoformat() if self.due_date else None,
+            "max_points": self.max_points,
             "uploaded_at": self.uploaded_at.isoformat() if self.uploaded_at else None
         }
