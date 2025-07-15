@@ -8,6 +8,7 @@ export default function Register() {
     email: "",
     password: "",
     confirmPassword: "",
+    role: "student", // Add role with default value
   });
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
@@ -19,7 +20,7 @@ export default function Register() {
       return;
     }
     try {
-      const response = await fetch("http://127.0.0.1:5000/api/register", {
+      const response = await fetch("https://projects-1-88nz.onrender.com/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -28,6 +29,7 @@ export default function Register() {
           name: formData.fullName,
           email: formData.email,
           password: formData.password,
+          role: formData.role, // Send role to backend
         }),
       });
 
@@ -35,8 +37,17 @@ export default function Register() {
         alert("Registration successful!");
         navigate("/login");
       } else {
-        const errorData = await response.json();
-        alert(`Registration failed: ${errorData.message || "Unknown error"}`);
+        let errorMessage = "Unknown error";
+        const text = await response.text();
+        try {
+          const errorData = JSON.parse(text);
+          errorMessage = errorData.message || errorMessage;
+        // eslint-disable-next-line no-unused-vars
+        } catch (err) {
+          // Not JSON, use raw text
+          errorMessage = text;
+        }
+        alert(`Registration failed: ${errorMessage}`);
       }
     } catch (error) {
       console.error("Error during registration:", error);
@@ -57,6 +68,24 @@ export default function Register() {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          <div>
+            <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
+              Register as
+            </label>
+            <div className="relative">
+              <select
+                id="role"
+                value={formData.role}
+                onChange={e => setFormData({ ...formData, role: e.target.value })}
+                className="w-full pl-3 pr-8 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent appearance-none"
+                required
+              >
+                <option value="student">Student</option>
+                <option value="teacher">Teacher</option>
+              </select>
+            </div>
+          </div>
+
           <div>
             <label htmlFor="fullName" className="block text-sm font-medium text-gray-700 mb-2">
               Full Name

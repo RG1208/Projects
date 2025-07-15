@@ -10,7 +10,7 @@ export const ProfileSection = () => {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch("http://127.0.0.1:5000/api/student/profile", {
+    fetch("https://projects-1-88nz.onrender.com/api/student/profile", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -20,7 +20,7 @@ export const ProfileSection = () => {
       })
       .catch((error) => console.error("Error fetching profile:", error));
 
-    fetch("http://127.0.0.1:5000/api/student/stats", {
+    fetch("https://projects-1-88nz.onrender.com/api/student/stats", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -38,7 +38,7 @@ export const ProfileSection = () => {
   };
 
   const handleUpdate = async () => {
-    const res = await fetch("http://127.0.0.1:5000/api/student/profile", {
+    const res = await fetch("https://projects-1-88nz.onrender.com/api/student/profile", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

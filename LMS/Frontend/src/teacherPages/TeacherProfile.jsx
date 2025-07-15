@@ -9,7 +9,7 @@ export default function TeacherProfile() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/teacher/profile", {
+    fetch("https://projects-1-88nz.onrender.com/api/teacher/profile", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -22,7 +22,7 @@ export default function TeacherProfile() {
         }
       });
 
-    fetch("http://localhost:5000/api/teacher/stats", {
+    fetch("https://projects-1-88nz.onrender.com/api/teacher/stats", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -38,7 +38,7 @@ export default function TeacherProfile() {
   };
 
   const handleUpdate = async () => {
-    const res = await fetch("http://localhost:5000/api/teacher/profile", {
+    const res = await fetch("https://projects-1-88nz.onrender.com/api/teacher/profile", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

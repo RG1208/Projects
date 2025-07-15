@@ -4,7 +4,7 @@ import { Course, CourseCard } from './CourseManagement'; // Adjust import as nee
 import { useNavigate } from 'react-router-dom';
 import { GraduationCap, CheckCircle } from 'lucide-react';
 
-const API_BASE = "http://127.0.0.1:5000/api/student";
+const API_BASE = "https://projects-1-88nz.onrender.com/api/student";
 const getToken = () => localStorage.getItem("token");
 
 const api = {
@@ -88,31 +88,31 @@ export const EnrolledCourses: React.FC = () => {
                 </div>
             ) : (
                 <>
-                {message && (
-                    <div className={`mb-6 p-4 rounded-lg ${message.includes('Successfully')
-                        ? 'bg-green-50 border border-green-200 text-green-800'
-                        : 'bg-red-50 border border-red-200 text-red-800'
-                        }`}>
-                        <div className="flex items-center">
-                            {message.includes('Successfully') ? (
-                                <CheckCircle className="w-5 h-5 mr-2" />
-                            ) : null}
-                            {message}
+                    {message && (
+                        <div className={`mb-6 p-4 rounded-lg ${message.includes('Successfully')
+                            ? 'bg-green-50 border border-green-200 text-green-800'
+                            : 'bg-red-50 border border-red-200 text-red-800'
+                            }`}>
+                            <div className="flex items-center">
+                                {message.includes('Successfully') ? (
+                                    <CheckCircle className="w-5 h-5 mr-2" />
+                                ) : null}
+                                {message}
+                            </div>
                         </div>
+                    )}
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        {enrolledCourses.map((course) => (
+                            <CourseCard
+                                key={course.id}
+                                course={course}
+                                isEnrolled={true}
+                                onViewCourse={(id) => console.log("View course", id)}
+                                onDeroll={handleDeroll}
+                                isDerolling={derollingCourseId === course.id}
+                            />
+                        ))}
                     </div>
-                )}
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {enrolledCourses.map((course) => (
-                        <CourseCard
-                            key={course.id}
-                            course={course}
-                            isEnrolled={true}
-                            onViewCourse={(id) => console.log("View course", id)}
-                            onDeroll={handleDeroll}
-                            isDerolling={derollingCourseId === course.id}
-                        />
-                    ))}
-                </div>
                 </>
             )}
         </div>

@@ -15,7 +15,7 @@ export default function TeacherCourses() {
   }, []);
 
   const fetchCourses = () => {
-    fetch("http://localhost:5000/api/teacher/courses", {
+    fetch("https://projects-1-88nz.onrender.com/api/teacher/courses", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -43,7 +43,7 @@ export default function TeacherCourses() {
   };
 
   const addCourse = async () => {
-    const res = await fetch("http://localhost:5000/api/teacher/courses", {
+    const res = await fetch("https://projects-1-88nz.onrender.com/api/teacher/courses", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -59,7 +59,7 @@ export default function TeacherCourses() {
   };
 
   const updateCourse = async () => {
-    const res = await fetch(`http://localhost:5000/api/teacher/courses/${editCourse.id}`, {
+    const res = await fetch(`https://projects-1-88nz.onrender.com/api/teacher/courses/${editCourse.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -76,7 +76,7 @@ export default function TeacherCourses() {
 
   const deleteCourse = async (id) => {
     if (!window.confirm("Are you sure you want to delete this course?")) return;
-    const res = await fetch(`http://localhost:5000/api/teacher/courses/${id}`, {
+    const res = await fetch(`https://projects-1-88nz.onrender.com/api/teacher/courses/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });

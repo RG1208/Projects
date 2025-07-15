@@ -6,7 +6,7 @@ export default function TeacherAssignments() {
   const [assignments, setAssignments] = useState({});
   const [courses, setCourses] = useState([]);
   const [selectedCourseId, setSelectedCourseId] = useState(localStorage.getItem("current_course_id") || "");
-  const [newAssignment, setNewAssignment] = useState({ title: "", description: "", courseId: "" });
+  const [newAssignment, setNewAssignment] = useState({ title: "", description: "", courseId: "", dueDate: "", maxPoints: "" });
   const [editAssignment, setEditAssignment] = useState(null);
   const token = localStorage.getItem("token");
 
@@ -22,7 +22,7 @@ export default function TeacherAssignments() {
   }, [selectedCourseId]);
 
   const fetchCourses = () => {
-    fetch("http://localhost:5000/api/teacher/courses", {
+    fetch("https://projects-1-88nz.onrender.com/api/teacher/courses", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -36,7 +36,7 @@ export default function TeacherAssignments() {
   };
 
   const fetchAssignments = () => {
-    fetch(`http://localhost:5000/api/teacher/courses/${selectedCourseId}/assignments`, {
+    fetch(`https://projects-1-88nz.onrender.com/api/teacher/courses/${selectedCourseId}/assignments`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -57,7 +57,7 @@ export default function TeacherAssignments() {
   const addAssignment = async () => {
     if (!newAssignment.courseId) return alert("Please select a course!");
 
-    await fetch(`http://localhost:5000/api/teacher/courses/${newAssignment.courseId}/assignments`, {
+    await fetch(`https://projects-1-88nz.onrender.com/api/teacher/courses/${newAssignment.courseId}/assignments`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -66,15 +66,17 @@ export default function TeacherAssignments() {
       body: JSON.stringify({
         title: newAssignment.title,
         description: newAssignment.description,
+        due_date: newAssignment.dueDate, // send due date
+        max_points: newAssignment.maxPoints, // send max points
       }),
     });
 
-    setNewAssignment({ title: "", description: "", courseId: courses[0]?.id || "" });
+    setNewAssignment({ title: "", description: "", courseId: courses[0]?.id || "", dueDate: "", maxPoints: "" });
     fetchAssignments();
   };
 
   const updateAssignment = async () => {
-    await fetch(`http://localhost:5000/api/teacher/assignments/${editAssignment.id}`, {
+    await fetch(`https://projects-1-88nz.onrender.com/api/teacher/assignments/${editAssignment.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -94,7 +96,7 @@ export default function TeacherAssignments() {
     const confirm = window.confirm("Delete this assignment?");
     if (!confirm) return;
 
-    await fetch(`http://localhost:5000/api/teacher/courses/${selectedCourseId}/assignments/${assignmentId}`, {
+    await fetch(`https://projects-1-88nz.onrender.com/api/teacher/courses/${selectedCourseId}/assignments/${assignmentId}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -156,6 +158,23 @@ export default function TeacherAssignments() {
             onChange={(e) => handleChange(e, setNewAssignment, newAssignment)}
             className="w-full p-3 border rounded-xl"
           />
+          <input
+            type="date"
+            name="dueDate"
+            placeholder="Due Date"
+            value={newAssignment.dueDate}
+            onChange={(e) => handleChange(e, setNewAssignment, newAssignment)}
+            className="w-full p-3 border rounded-xl"
+          />
+          <input
+            type="number"
+            name="maxPoints"
+            placeholder="Max Points"
+            value={newAssignment.maxPoints}
+            onChange={(e) => handleChange(e, setNewAssignment, newAssignment)}
+            className="w-full p-3 border rounded-xl"
+            min="0"
+          />
           <button
             className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl transition"
             onClick={addAssignment}
@@ -194,6 +213,12 @@ export default function TeacherAssignments() {
                   <div className="flex-1">
                     <h4 className="text-lg font-semibold text-purple-700">{item.title}</h4>
                     <p className="text-sm text-gray-600 mt-1">{item.description}</p>
+                    {item.due_date && (
+                      <p className="text-xs text-gray-500 mt-1">Due Date: {item.due_date}</p>
+                    )}
+                    {item.max_points !== undefined && item.max_points !== null && item.max_points !== "" && (
+                      <p className="text-xs text-gray-500 mt-1">Max Points: {item.max_points}</p>
+                    )}
                   </div>
                 )}
                 <div className="space-x-2">

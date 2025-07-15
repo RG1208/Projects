@@ -45,7 +45,7 @@ interface Course {
 }
 
 // API functions for backend integration
-const API_BASE = "http://127.0.0.1:5000/api/student";
+const API_BASE = "https://projects-1-88nz.onrender.com/api/student";
 
 const getToken = () => localStorage.getItem("token");
 

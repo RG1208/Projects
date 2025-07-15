@@ -8,7 +8,7 @@ export default function TeacherAssignmentSubmissions() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/teacher/submissions/${assignmentId}`, {
+    fetch(`https://projects-1-88nz.onrender.com/api/teacher/submissions/${assignmentId}`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then(res => res.json())
@@ -28,7 +28,7 @@ export default function TeacherAssignmentSubmissions() {
       alert("Please enter both marks and feedback.");
       return;
     }
-    fetch(`http://localhost:5000/api/teacher/grade_submission/${submissionId}`, {
+    fetch(`https://projects-1-88nz.onrender.com/api/teacher/grade_submission/${submissionId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -39,7 +39,7 @@ export default function TeacherAssignmentSubmissions() {
       .then(res => res.json())
       .then(() => {
         // Refresh submissions after grading
-        fetch(`http://localhost:5000/api/teacher/submissions/${assignmentId}`, {
+        fetch(`https://projects-1-88nz.onrender.com/api/teacher/submissions/${assignmentId}`, {
           headers: { Authorization: `Bearer ${token}` },
         })
           .then(res => res.json())

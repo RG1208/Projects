@@ -26,7 +26,7 @@ export default function TeacherLectures() {
   }, [selectedCourseId]);
 
   const fetchCourses = () => {
-    fetch("http://localhost:5000/api/teacher/courses", {
+    fetch("https://projects-1-88nz.onrender.com/api/teacher/courses", {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -39,7 +39,7 @@ export default function TeacherLectures() {
   };
 
   const fetchLectures = () => {
-    fetch(`http://localhost:5000/api/teacher/courses/${selectedCourseId}/lectures`, {
+    fetch(`https://projects-1-88nz.onrender.com/api/teacher/courses/${selectedCourseId}/lectures`, {
       headers: { Authorization: `Bearer ${token}` },
     })
       .then((res) => res.json())
@@ -68,7 +68,7 @@ export default function TeacherLectures() {
   const addLecture = async () => {
     if (!newLecture.courseId) return alert("Please select a course for the lecture!");
 
-    await fetch(`http://localhost:5000/api/teacher/courses/${newLecture.courseId}/lectures`, {
+    await fetch(`https://projects-1-88nz.onrender.com/api/teacher/courses/${newLecture.courseId}/lectures`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -85,7 +85,7 @@ export default function TeacherLectures() {
   };
 
   const updateLecture = async () => {
-    await fetch(`http://localhost:5000/api/teacher/lectures/${editLecture.id}`, {
+    await fetch(`https://projects-1-88nz.onrender.com/api/teacher/lectures/${editLecture.id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -105,7 +105,7 @@ export default function TeacherLectures() {
     const confirm = window.confirm("Delete this lecture?");
     if (!confirm) return;
 
-    await fetch(`http://localhost:5000/api/teacher/courses/${selectedCourseId}/lectures/${lectureId}`, {
+    await fetch(`https://projects-1-88nz.onrender.com/api/teacher/courses/${selectedCourseId}/lectures/${lectureId}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -138,6 +138,19 @@ export default function TeacherLectures() {
         {/* Add Lecture Form */}
         <div className="bg-white p-6 rounded-2xl shadow-md space-y-4 border border-purple-100">
           <h3 className="text-xl font-semibold text-gray-800">➕ Add New Lecture</h3>
+          <select
+            name="courseId"
+            value={newLecture.courseId}
+            onChange={(e) => handleChange(e, setNewLecture, newLecture)}
+            className="w-full p-3 border rounded-xl"
+          >
+            <option value="">-- Select Course --</option>
+            {courses.map((course) => (
+              <option key={course.id} value={course.id}>
+                {course.title}
+              </option>
+            ))}
+          </select>
           <input
             name="title"
             placeholder="Title"
@@ -159,19 +172,6 @@ export default function TeacherLectures() {
             onChange={(e) => handleChange(e, setNewLecture, newLecture)}
             className="w-full p-3 border rounded-xl"
           />
-          <select
-            name="courseId"
-            value={newLecture.courseId}
-            onChange={(e) => handleChange(e, setNewLecture, newLecture)}
-            className="w-full p-3 border rounded-xl"
-          >
-            <option value="">-- Select Course --</option>
-            {courses.map((course) => (
-              <option key={course.id} value={course.id}>
-                {course.title}
-              </option>
-            ))}
-          </select>
           <button
             className="bg-purple-600 hover:bg-purple-700 text-white px-5 py-2 rounded-xl transition"
             onClick={addLecture}
