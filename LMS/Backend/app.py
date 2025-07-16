@@ -1,4 +1,4 @@
-from flask import Flask #type:ignore
+from flask import Flask, jsonify #type:ignore
 from config import Config
 from flask_cors import CORS  # type: ignore
 from models.extensions import db  
@@ -14,10 +14,15 @@ app = Flask(__name__)
 app.config.from_object(Config)
 migrate = Migrate(app, db) # type: ignore
 
-CORS(app, resources={r"/*": {"origins": "https://learnify-khaki-chi.vercel.app/"}}, supports_credentials=True)
+CORS(app, resources={r"/*": {"origins": "https://learnify-khaki-chi.vercel.app"}}, supports_credentials=True)
 
 db.init_app(app)
 jwt = JWTManager(app)
+
+@app.route('/', methods=['GET'])
+def index():
+    """Health check route"""
+    return jsonify({'message': 'API is working', 'status': 'success'}), 200
 
 app.register_blueprint(login_bp, url_prefix='/api')  # adds '/api' before every route
 app.register_blueprint(register_bp, url_prefix='/api')  # adds '/api' before every route
